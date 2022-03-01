@@ -1,6 +1,7 @@
 package varanustcptransporter
 
 import (
+	"fmt"
 	"net"
 
 	"github.com/multiformats/go-multiaddr"
@@ -16,7 +17,7 @@ func AddrToMultiaddr(addr net.Addr) multiaddr.Multiaddr {
 		}
 		ip := tcpAddr.IP
 		port := tcpAddr.Port
-		baseComponent, err := multiaddr.NewComponent("tcp", string(port))
+		baseComponent, err := multiaddr.NewComponent("tcp", fmt.Sprint(port))
 		if err != nil {
 			panic(err)
 		}
