@@ -10,7 +10,7 @@ import (
 
 
 type TcpConnection struct {
-	internal net.TCPConn
+	internal *net.TCPConn
 	localAdrr *ma.Multiaddr
 	remoteAddr *ma.Multiaddr
 }

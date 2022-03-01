@@ -13,16 +13,17 @@ type TransportProvider interface {
 	// this Multiaddress
 	ContainsNecessaryProtocols(address *ma.Multiaddr) bool
 	// Dialer returns the generic associated dialer
-	Dialer(localAddress *ma.Multiaddr) (TransportDialer, error)
+	Dialer(localAddress ma.Multiaddr) (TransportDialer, error)
 	// Listener returns the generic associated listener
-	Listener(localAddress *ma.Multiaddr) (TransportListener, error)
+	Listener(localAddress ma.Multiaddr) (TransportListener, error)
 }
 
 type TransportDialer interface {
-	Dial(address *ma.Multiaddr) (TransportConnection, error)
+	Dial(address ma.Multiaddr) (TransportConnection, error)
 }
 
 type TransportListener interface {
+	LocalAddress() *ma.Multiaddr
 	Accept() (TransportConnection, error)
 }
 

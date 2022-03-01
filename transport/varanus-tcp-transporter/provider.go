@@ -32,13 +32,13 @@ func (p *TcpProvider) ContainsNecessaryProtocols(address *ma.Multiaddr) bool {
 }
 
 // Dialer returns the generic associated dialer
-func (p *TcpProvider) Dialer(localAddress *ma.Multiaddr) (varanus_core.TransportDialer, error) {
-	panic("not implemented") // TODO: Implement
+func (p *TcpProvider) Dialer(localAddress ma.Multiaddr) (varanus_core.TransportDialer, error) {
+	return NewTcpDialer(localAddress)
 }
 
 // Listener returns the generic associated listener
-func (p *TcpProvider) Listener(localAddress *ma.Multiaddr) (varanus_core.TransportListener, error) {
-	panic("not implemented") // TODO: Implement
+func (p *TcpProvider) Listener(localAddress ma.Multiaddr) (varanus_core.TransportListener, error) {
+	return NewTcpListener(localAddress)
 }
 
 var NotAllNecessarycomponents = errors.New("Given address didn't contain all necessary components")

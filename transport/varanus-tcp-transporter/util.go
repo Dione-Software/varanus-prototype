@@ -3,6 +3,7 @@ package varanustcptransporter
 import (
 	"fmt"
 	"net"
+	"strconv"
 
 	"github.com/multiformats/go-multiaddr"
 )
@@ -41,4 +42,60 @@ func AddrToMultiaddr(addr net.Addr) multiaddr.Multiaddr {
 	default:
 		panic("")
 	}
+}
+
+
+func MultiaddrToTcpAddr(address multiaddr.Multiaddr) (*net.TCPAddr, error) {
+	stringAddress := ""
+	stringAddressSet := false
+	port := 0
+	portSet := false
+	shouldAbort := false
+	var funcError error
+	multiaddr.ForEach(address, func(c multiaddr.Component) bool {
+		protocol := c.Protocol()
+		switch protocol.Code {
+		case multiaddr.P_TCP:
+			portString := c.Value()
+			port64, err := strconv.ParseInt(portString, 10, 64)
+			if err != nil {
+				shouldAbort = true
+				funcError = err
+				return false
+			}
+			port = int(port64)
+			portSet = true
+		case multiaddr.P_DNS:
+			stringAddressSet = true
+			stringAddress = c.Value()
+		case multiaddr.P_IP4:
+			stringAddressSet = true
+			stringAddress = c.Value()
+		case multiaddr.P_DNS4:
+			stringAddressSet = true
+			stringAddress = c.Value()
+		case multiaddr.P_DNS6:
+			stringAddressSet = true
+			stringAddress = c.Value()
+		case multiaddr.P_DNSADDR:
+			stringAddressSet = true
+			stringAddress = c.Value()
+		case multiaddr.P_IP6:
+			stringAddressSet = true
+			stringAddress = c.Value()
+		}
+		return true
+	})
+	if shouldAbort {
+		return nil, funcError
+	}
+	if !(stringAddressSet && portSet) {
+		return nil, NotAllNecessarycomponents
+	}
+	stringAddress = fmt.Sprintf("%v:%v", stringAddress, port)
+	tcpAddr, err := net.ResolveTCPAddr("tcp", stringAddress)
+	if err != nil {
+		return nil, err
+	}
+	return tcpAddr, nil
 }
