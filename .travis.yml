@@ -1,0 +1,14 @@
+language: go
+
+go:
+  - 1.17
+
+os:
+  - linux
+  - osx
+  - windows
+  - freebsd
+
+srcipt:
+  go get -d ./...
+  go test ./...
